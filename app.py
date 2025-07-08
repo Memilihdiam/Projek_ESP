@@ -1,7 +1,8 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, url_for, redirect
 from application.models.face_recognition import face_detection
 import time
 import threading
+from werkzeug.security import generate_password_hash, check_password_hash
 
 video_frame = None
 lock = threading.Lock()
@@ -10,7 +11,13 @@ app = Flask(__name__, template_folder = "application/templates")
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("login.html")
+
+@app.route('/login', methods=['POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
 @app.route('/upload')
 def upload():
